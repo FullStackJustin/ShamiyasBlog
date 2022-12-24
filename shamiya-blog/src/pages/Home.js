@@ -7,7 +7,7 @@ const Home = () => {
     return (
         <section className="flex flex-col lg:flex-row md:flex-row relative mx-auto mt-[0px] mb-[0px] w-[99vw] h-[screen5] overflow-y-scroll h-[100vh] bg-[#A0A694]">
             <div className=" relative flex m-auto justify-center h-[60%] py-10 items-center flex-auto w-[50%]">
-                <img src={urLogoHere} alt="Your Logo" className="w-[30%] max-w-[30%] pb-[10px] "></img>
+                <img src={urLogoHere} alt="Your Logo" className="w-[30%] max-w-[30%] md:max-w-[45%] pb-[10px] "></img>
                 <div>
                     <p className="text-center text-2xl font-bold">(Your Blog Name)</p>
                     <br/>
