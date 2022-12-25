@@ -24,7 +24,8 @@ const AdminLogin = () => {
     
     return(
     <div className="relative m-auto max-w-[99vw] max-h-[100vh] h-[100vh] bg-[#A0A694]">
-            <div className="relative max-w-[700px] mx-auto mt-20 border rounded-xl p-4 ">
+        <br/> <br/> <br/>
+            <div className="relative max-w-[700px] mx-auto border rounded-xl p-4 ">
                 <div>
                     <h1 className="text-center text-2xl font-bold py-2"> Sign In</h1>
                 </div>
