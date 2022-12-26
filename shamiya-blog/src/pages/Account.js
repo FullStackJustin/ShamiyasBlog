@@ -76,7 +76,7 @@ const Account = () => {
 
     return (
         <section className="h-[100vh] w-[100vw] bg-[#A0A694] flex flex-col justify-center items-center">
-            <header className="text-bold pt-[20vh] ">Update account</header>
+            <header className="text-bold text-center pt-[10vh] ">Update account</header>
             <form onSubmit={handleSubmit} className="border-double border-4 rounded-lg p-[15px] h-65vh md:max-h[60vh] m-auto lg:max-h-[55%] w-[50vw] md:max-w-[55vw] lg:max-w-[60vw] ">
                 <label htmlFor="displayName">
                     Display Name:

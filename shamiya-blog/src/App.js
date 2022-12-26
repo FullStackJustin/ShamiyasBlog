@@ -7,6 +7,7 @@ import ProtectedRoute from './pages/ProtectedRoute';
 import BookReviews from './pages/BookReviews';
 import Account from './pages/Account';
 import AboutMe from './pages/AboutMe';
+import AdminHome from './pages/AdminHome';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/bookreviews" element={<BookReviews/>} />
         <Route path="/about" element={<AboutMe/>} />
         <Route path="/account" element={<ProtectedRoute><Account/></ProtectedRoute>} />
+        <Route path="/adminhome" element={<ProtectedRoute><AdminHome/></ProtectedRoute>} />
       </Routes>
     </AuthContextProvider>
   );

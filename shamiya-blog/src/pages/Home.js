@@ -19,7 +19,7 @@ const Home = () => {
             </div>
             <div className="flex mx-auto justify-center items-center flex-auto max-w-[50%]">
                 <div className=" flex flex-col justify-between w-[75%] sm:w-[100%] md:w-[80%] lg:w-[85%] h-[90vh] lg:max-h-[70%] md:max-h-[70%] bg-[#D2D4D9] pt-[10px] rounded-lg ">
-                    <Link to="/" className="w-[95%] text-xl lg:text-sm w-[95%] border-double border-4 border-neutral-400 rounded-lg shadow-xl text-center py-[10px] mx-auto ">About Me</Link>
+                    <Link to="/about" className="w-[95%] text-xl lg:text-sm w-[95%] border-double border-4 border-neutral-400 rounded-lg shadow-xl text-center py-[10px] mx-auto ">About Me</Link>
                     <Link to="/bookreviews" className="w-[95%] text-xl lg:text-sm w-[95%] border-double border-4 border-neutral-400 rounded-lg shadow-xl text-center py-[10px] mx-auto ">Book Reviews</Link>
                     <Link to="/" className="w-[95%] text-xl lg:text-sm w-[95%] border-double border-4 border-neutral-400 rounded-lg shadow-xl text-center py-[10px] mx-auto ">Movie & Show Reviews</Link>
                     <Link to="/" className="w-[95%] text-xl lg:text-sm w-[95%] border-double border-4 border-neutral-400 rounded-lg shadow-xl text-center py-[10px] mx-auto ">My Podcasts</Link>
