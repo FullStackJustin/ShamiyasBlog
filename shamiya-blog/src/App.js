@@ -8,6 +8,7 @@ import BookReviews from './pages/BookReviews';
 import Account from './pages/Account';
 import AboutMe from './pages/AboutMe';
 import AdminHome from './pages/AdminHome';
+import FilmReviews from './pages/FilmReviews';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/adminlogin" element={<AdminLogin/>} />
         <Route path="/bookreviews" element={<BookReviews/>} />
+        <Route path="/filmreviews" element={<FilmReviews/>} />
         <Route path="/about" element={<AboutMe/>} />
         <Route path="/account" element={<ProtectedRoute><Account/></ProtectedRoute>} />
         <Route path="/adminhome" element={<ProtectedRoute><AdminHome/></ProtectedRoute>} />

@@ -21,15 +21,15 @@ const Home = () => {
                 <div className=" flex flex-col justify-between w-[75%] sm:w-[100%] md:w-[80%] lg:w-[85%] h-[90vh] lg:max-h-[70%] md:max-h-[70%] bg-[#D2D4D9] pt-[10px] rounded-lg ">
                     <Link to="/about" className="w-[95%] text-xl lg:text-sm w-[95%] border-double border-4 border-neutral-400 rounded-lg shadow-xl text-center py-[10px] mx-auto ">About Me</Link>
                     <Link to="/bookreviews" className="w-[95%] text-xl lg:text-sm w-[95%] border-double border-4 border-neutral-400 rounded-lg shadow-xl text-center py-[10px] mx-auto ">Book Reviews</Link>
-                    <Link to="/" className="w-[95%] text-xl lg:text-sm w-[95%] border-double border-4 border-neutral-400 rounded-lg shadow-xl text-center py-[10px] mx-auto ">Movie & Show Reviews</Link>
-                    <Link to="/" className="w-[95%] text-xl lg:text-sm w-[95%] border-double border-4 border-neutral-400 rounded-lg shadow-xl text-center py-[10px] mx-auto ">My Podcasts</Link>
+                    <Link to="/filmreviews" className="w-[95%] text-xl lg:text-sm w-[95%] border-double border-4 border-neutral-400 rounded-lg shadow-xl text-center py-[10px] mx-auto ">Film Reviews</Link>
                     <div className="flex flex-row justify-center w-[100%] max-w-[40%] justify-between items-center mx-auto pb-[15px] h-10 ">
-                        <i className="fa-brands fa-xl fa-instagram"></i>
-                        <i className="fa-brands fa-xl fa-linkedin"></i>
-                        <i className="fa-solid fa-xl fa-podcast"></i>
+                        <i className="fa-brands fa-xl fa-instagram"/>
+                        <i className="fa-brands fa-xl fa-linkedin"/>
+                        <i className="fa-solid fa-xl fa-podcast"/>
                     </div>
                 </div>
             </div>
+            <a href="/adminlogin">Admin Login</a>
         </section>
     )
 

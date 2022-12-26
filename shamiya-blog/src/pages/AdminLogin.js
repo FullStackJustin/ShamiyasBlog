@@ -14,7 +14,7 @@ const AdminLogin = () => {
         setError('')
         try {
             await logIn(email, password)
-            navigate('/account')
+            navigate('/adminhome')
             console.log("sccuessfully signed in")
         } catch (err) {
             setError(err.message)
