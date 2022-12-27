@@ -1,3 +1,4 @@
+import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../context/AuthContext';
@@ -12,13 +13,19 @@ const AdminLogin = () => {
     const handleSignIn = async (e) => {
         e.preventDefault();
         setError('')
-        try {
-            await logIn(email, password)
-            navigate('/adminhome')
-            console.log("sccuessfully signed in")
-        } catch (err) {
-            setError(err.message)
-            console.log(error + "Something went Wrong")
+        const user = getAuth();
+
+        if (!user.currentUser){
+            try {
+                await logIn(email, password)
+                navigate('/adminhome')
+                console.log("sccuessfully signed in")
+            } catch (err) {
+                setError(err.message)
+                console.log(error + "Something went Wrong")
+            }
+        } else {
+            navigate('/adminHome')
         }
     }
     
