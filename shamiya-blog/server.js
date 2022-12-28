@@ -32,6 +32,7 @@ app.post("/posts", async (req, res) => {
       date: req.body.date,
       tags: req.body.tags,
       type: JSON.stringify(req.body.type),
+      image: req.body.image,
     }
     const docRef = await db.collection('posts').doc(id).set(postInfo);
       res.send(docRef)
