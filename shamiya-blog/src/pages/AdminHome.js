@@ -1,7 +1,8 @@
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { ref, uploadBytes } from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
 // import { UserAuth } from "../context/AuthContext";
-import { auth } from "../firebase";
+import { auth, storage } from "../firebase";
 // import {collection, addDoc} from 'firebase/firestore';
 
 const authentication = getAuth();
@@ -13,15 +14,23 @@ const AdminHome = () => {
     const [postTitle, setPostTitle] = useState("");
     const unsubscribeRef = useRef(null);
     const [bookOrFilm, setBookOrFilm] = useState("");
-    const [imgEncoded, setImageEncoded] = useState("");
+    const storageRef = ref(storage)
 
     const handleChange = (event) => {
         setBookOrFilm(event.target.value);
     };
 
-    const encodedImg = (event) => {
-        const file = event.target.files[0];
-      }
+    //START - This is not completed code and must revisit to make sure it functions correctly
+    const encodedImg = async (event) => {
+        const file = await event.target.files[0];
+        const imageRef = ref(storage, file)
+        uploadBytes(imageRef, file).then((snapshot) => {
+            console.log('Uploaded a blob or file!', snapshot);
+          });
+    }
+    //END - Incompleted code About
+
+    console.log(storageRef)
       
 
     const handleLogOut = async (e) => {
@@ -44,8 +53,6 @@ const AdminHome = () => {
     }, [])
     
     const displayPosts = async() => {
-        
-        
 
     await fetch('http://localhost:3002/posts/all', {headers: {
         method: 'GET',
@@ -60,7 +67,7 @@ const AdminHome = () => {
                     <p class="py-[15px]">${values.date} </p>
                     <p class="py-[15px]">${values.title} </p>
                     </span>
-                    <img src=${imgEncoded} alt="Asta" class="w-[90%] h-[30]  py-[15px] "/>
+                    <img src="#" alt="Asta" class="w-[90%] h-[30]  py-[15px] "/>
                     <p class="text-center py-[15px] ">${values.postMessage} </p>
                     <p class="text-end py-[15px] ">${values.tags} </p>
                     </div>`
@@ -72,7 +79,6 @@ const AdminHome = () => {
         
     }
     window.addEventListener("load", displayPosts);
-    console.log(imgEncoded)
     
 const addPost = async (e) => {
         
@@ -88,7 +94,6 @@ const addPost = async (e) => {
             date: formattedDate,
             tags: tags,
             type: bookOrFilm,
-            image: imgEncoded,
         }
         await fetch('http://localhost:3002/posts', {
             method: 'POST',
