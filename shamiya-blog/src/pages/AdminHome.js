@@ -19,24 +19,24 @@ const AdminHome = () => {
     };
     //End
 
-    
+
     //START - Logout function for logout button
     const handleLogOut = async (e) => {
         e.preventDefault();
         signOut(auth);
     }
     // END - Logout function for logout button
-    
+
     // START - Get the current user data on mount and unmount when user is logged out
     const unsubscribeRef = useRef(null);
     useEffect(() => {
         unsubscribeRef.current =
-        onAuthStateChanged(authentication, (user) => {
-            if (user) {
-                console.log(user)
-                setAdmin(user)
-            }
-        });
+            onAuthStateChanged(authentication, (user) => {
+                if (user) {
+                    console.log(user)
+                    setAdmin(user)
+                }
+            });
         return () => {
             if (unsubscribeRef.current) {
                 unsubscribeRef.current()
@@ -44,7 +44,7 @@ const AdminHome = () => {
         };
     }, [])
     //END - Get the current user data on mount and unmount when user is logged out
-    
+
     // Start - Function and Api calls for displaying posts
     const displayPosts = async () => {
         await fetch('http://localhost:3002/posts/all', {
@@ -52,51 +52,55 @@ const AdminHome = () => {
                 method: 'GET',
             }
         })
-        .then((res) => { return res.json() })
-        .then((data) => {
-            console.log(data)
-            let postData = "";
-            data.map((values) => {
-                return postData += `<div class="m-auto p-[10px] rounded-lg bg-[#D2D4D9] mb-[15px] h-auto w-[95%] md:w-[95%] lg:max-w-[85%] flex flex-col ">
+            .then((res) => { return res.json() })
+            .then((data) => {
+                console.log(data)
+                let postData = "";
+                data.map((values) => {
+                    return postData += `<div class="m-auto p-[10px] rounded-lg bg-[#D2D4D9] mb-[15px] h-auto w-[95%] md:w-[95%] lg:max-w-[85%] flex flex-col ">
                 <span class="flex flex-row justify-between px-[25px]">
                 <p class="py-[15px]">${values.date} </p>
                 <p class="py-[15px]">${values.title} </p>
                 </span>
-                <img src="#" alt="Asta" class="w-[90%] h-[30]  py-[15px] "/>
+                <img src="${values.image}" alt="Asta" class="w-[90%] h-[30%]  py-[15px] "/>
                 <p class="text-center py-[15px] ">${values.postMessage} </p>
                 <p class="text-end py-[15px] ">${values.tags} </p>
                 </div>`
+                })
+                document.getElementById("postsSection").innerHTML = postData;
+            }).catch((err) => {
+                console.log(err);
             })
-            document.getElementById("postsSection").innerHTML = postData;
-        }).catch((err) => {
-            console.log(err);
-        })
-        
+
     }
     window.addEventListener("load", displayPosts);
     //End - Function and Api calls for displaying posts
-    
-            // Save image input to state variable
-        const [uploadImg, setUploadImg] = useState(null)
-        const addImg = (e) => {
-            const file = e.target.files[0];
-            setUploadImg(file)
-        }
 
-    const addPost = async (e) => {
-        e.preventDefault();
+    // Save image input to state variable
+    const [uploadImg, setUploadImg] = useState(null)
+    const addImg = (e) => {
+        const file = e.target.files[0];
+        setUploadImg(file)
+    }
+    const [imgUrl, setImgUrl] = useState("");
 
-        if(uploadImg == null) return;
+    //Add post function to post frontend inputs to backend
+    const addPost = async () => {
+
+        if (uploadImg == null) return;
         const imgRef = ref(storage, `/images${uploadImg.name}`);
         uploadBytes(imgRef, uploadImg).then((snapshot) => {
-            alert("img uploaded")
+            getDownloadURL(snapshot.ref).then((url) => {
+                setImgUrl(url);
+            })
+            alert("Image uploaded")
         })
 
         const date = new Date();
         const month = date.getMonth() + 1;
-        const day = date.getDay();
+        const day = date.getDate();
         const year = date.getFullYear();
-        const formattedDate = `${month}/${day}/${year}`
+        const formattedDate = `${month}/${day}/${year}`;
         try {
             const formData = {
                 postMessage: post,
@@ -104,6 +108,7 @@ const AdminHome = () => {
                 date: formattedDate,
                 tags: tags,
                 type: bookOrFilm,
+                image: imgUrl,
             }
             await fetch('http://localhost:3002/posts', {
                 method: 'POST',
@@ -148,7 +153,7 @@ const AdminHome = () => {
                                 <input type="radio" name="type" value="film" checked={bookOrFilm === 'film'} onChange={handleChange} />
                                 Film
                             </label>
-                                <input type="file" accept="image/*" name="uploadImage" onChange={addImg} />
+                            <input type="file" accept="image/*" name="uploadImage" onChange={addImg} />
                         </div>
                         <br />
                         <button type="submit" className="bg-[#D2D4D9] rounded-lg shadow-md text-center">Post</button>
