@@ -47,11 +47,11 @@ const AdminHome = () => {
 
     // Start - Function and Api calls for displaying posts
     const displayPosts = async () => {
-            await fetch('http://localhost:3002/posts/all', {
-                headers: {
-                    method: 'GET',
-                }
-            })
+        await fetch('http://localhost:3002/posts/all', {
+            headers: {
+                method: 'GET',
+            }
+        })
             .then((res) => { return res.json() })
             .then((data) => {
                 console.log(data)
@@ -71,9 +71,9 @@ const AdminHome = () => {
             }).catch((err) => {
                 console.log(err);
             })
-            
-        }
-        window.addEventListener("load", displayPosts);
+
+    }
+    window.addEventListener("load", displayPosts);
     //End - Function and Api calls for displaying posts
 
     // Save image input to state variable
@@ -85,15 +85,15 @@ const AdminHome = () => {
     const [imgUrl, setImgUrl] = useState("");
 
     //Add post function to post frontend inputs to backend
-    const addPost = async(e) => {
+    const addPost = async (e) => {
         e.preventDefault();
-            if (uploadImg == null) return;
-            const imgRef = ref(storage, `/images${uploadImg.name}`);
-            uploadBytes(imgRef, uploadImg).then((snapshot) => {
-            getDownloadURL(snapshot.ref).then((url) => {
+        if (uploadImg == null) return;
+        const imgRef = ref(storage, `/images${uploadImg.name}`);
+        uploadBytes(imgRef, uploadImg).then( async (snapshot) => {
+            const url = await getDownloadURL(snapshot.ref)
                 setImgUrl(url);
-                    alert("Your Post has Uploaded")
-            })
+                alert("Your Post has Uploaded")
+        }).then(() => {
             displayPosts();
         })
         const date = new Date();
@@ -112,15 +112,15 @@ const AdminHome = () => {
             }
             await fetch('http://localhost:3002/posts', {
                 method: 'POST',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                }).then((res) => console.log(res))
-            } catch (err) {
-                console.log(err);
-            }
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            }).then((res) => console.log(res))
+        } catch (err) {
+            console.log(err);
+        }
     }
     // END - Function and method for sending post data to backend
 
@@ -154,8 +154,8 @@ const AdminHome = () => {
                         </div>
                         <br />
                         <span className="flex flex-row justify-around">
-                        <button type="submit" className="bg-[#D2D4D9] w-[45%] rounded-lg shadow-md text-center">Post</button>
-                        <button type="reset" className="bg-[#D2D4D9] w-[45%] rounded-lg shadow-md text-center">Reset Form</button>
+                            <button type="submit" className="bg-[#D2D4D9] w-[45%] rounded-lg shadow-md text-center">Post</button>
+                            <button type="reset" className="bg-[#D2D4D9] w-[45%] rounded-lg shadow-md text-center">Reset Form</button>
                         </span>
                     </form>
                 </section>
