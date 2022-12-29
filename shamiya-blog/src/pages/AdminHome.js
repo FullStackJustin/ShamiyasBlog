@@ -1,62 +1,57 @@
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
-// import { UserAuth } from "../context/AuthContext";
 import { auth, storage } from "../firebase";
 // import {collection, addDoc} from 'firebase/firestore';
 
 const authentication = getAuth();
 
 const AdminHome = () => {
+    //Start - state variables for html inputs
     const [admin, setAdmin] = useState("");
     const [tags, setTags] = useState("");
     const [post, setPost] = useState("");
     const [postTitle, setPostTitle] = useState("");
-    const unsubscribeRef = useRef(null);
     const [bookOrFilm, setBookOrFilm] = useState("");
-    const storageRef = ref(storage)
 
     const handleChange = (event) => {
         setBookOrFilm(event.target.value);
     };
+    //End
 
-    //START - This is not completed code and must revisit to make sure it functions correctly
-    const encodedImg = async (event) => {
-        const file = await event.target.files[0];
-        const imageRef = ref(storage, file)
-        uploadBytes(imageRef, file).then((snapshot) => {
-            console.log('Uploaded a blob or file!', snapshot);
-          });
-    }
-    //END - Incompleted code About
-
-    console.log(storageRef)
-      
-
+    
+    //START - Logout function for logout button
     const handleLogOut = async (e) => {
         e.preventDefault();
         signOut(auth);
     }
+    // END - Logout function for logout button
+    
+    // START - Get the current user data on mount and unmount when user is logged out
+    const unsubscribeRef = useRef(null);
     useEffect(() => {
         unsubscribeRef.current =
-            onAuthStateChanged(authentication, (user) => {
-                if (user) {
-                    console.log(user)
-                    setAdmin(user)
-                }
-            });
+        onAuthStateChanged(authentication, (user) => {
+            if (user) {
+                console.log(user)
+                setAdmin(user)
+            }
+        });
         return () => {
             if (unsubscribeRef.current) {
                 unsubscribeRef.current()
             }
         };
     }, [])
+    //END - Get the current user data on mount and unmount when user is logged out
     
-    const displayPosts = async() => {
-
-    await fetch('http://localhost:3002/posts/all', {headers: {
-        method: 'GET',
-    }})
+    // Start - Function and Api calls for displaying posts
+    const displayPosts = async () => {
+        await fetch('http://localhost:3002/posts/all', {
+            headers: {
+                method: 'GET',
+            }
+        })
         .then((res) => { return res.json() })
         .then((data) => {
             console.log(data)
@@ -64,13 +59,13 @@ const AdminHome = () => {
             data.map((values) => {
                 return postData += `<div class="m-auto p-[10px] rounded-lg bg-[#D2D4D9] mb-[15px] h-auto w-[95%] md:w-[95%] lg:max-w-[85%] flex flex-col ">
                 <span class="flex flex-row justify-between px-[25px]">
-                    <p class="py-[15px]">${values.date} </p>
-                    <p class="py-[15px]">${values.title} </p>
-                    </span>
-                    <img src="#" alt="Asta" class="w-[90%] h-[30]  py-[15px] "/>
-                    <p class="text-center py-[15px] ">${values.postMessage} </p>
-                    <p class="text-end py-[15px] ">${values.tags} </p>
-                    </div>`
+                <p class="py-[15px]">${values.date} </p>
+                <p class="py-[15px]">${values.title} </p>
+                </span>
+                <img src="#" alt="Asta" class="w-[90%] h-[30]  py-[15px] "/>
+                <p class="text-center py-[15px] ">${values.postMessage} </p>
+                <p class="text-end py-[15px] ">${values.tags} </p>
+                </div>`
             })
             document.getElementById("postsSection").innerHTML = postData;
         }).catch((err) => {
@@ -79,80 +74,93 @@ const AdminHome = () => {
         
     }
     window.addEventListener("load", displayPosts);
+    //End - Function and Api calls for displaying posts
     
-const addPost = async (e) => {
-        
+            // Save image input to state variable
+        const [uploadImg, setUploadImg] = useState(null)
+        const addImg = (e) => {
+            const file = e.target.files[0];
+            setUploadImg(file)
+        }
+
+    const addPost = async (e) => {
+        e.preventDefault();
+
+        if(uploadImg == null) return;
+        const imgRef = ref(storage, `/images${uploadImg.name}`);
+        uploadBytes(imgRef, uploadImg).then((snapshot) => {
+            alert("img uploaded")
+        })
+
         const date = new Date();
-        const month = date.getMonth()+1;
+        const month = date.getMonth() + 1;
         const day = date.getDay();
         const year = date.getFullYear();
         const formattedDate = `${month}/${day}/${year}`
-    try {
-        const formData = {
-            postMessage: post,
-            title: postTitle,
-            date: formattedDate,
-            tags: tags,
-            type: bookOrFilm,
+        try {
+            const formData = {
+                postMessage: post,
+                title: postTitle,
+                date: formattedDate,
+                tags: tags,
+                type: bookOrFilm,
+            }
+            await fetch('http://localhost:3002/posts', {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            }).then((res) => console.log(res))
+                .then((data) => {
+                    console.log(data);
+                })
+        } catch (err) {
+            console.log(err);
         }
-        await fetch('http://localhost:3002/posts', {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        }).then((res) => console.log(res))
-            .then((data) => {
-                console.log(data);
-            })
-    } catch(err) {
-        console.log(err);
     }
-}   
+    // END - Function and method for sending post data to backend
 
-return (
-    <div className="h-[100vh] w-[100vw]flex flex-col ">
-        <div className="max-w-[95vw] text-[20%] md:text-[1em] lg:text-[1.5em] md:w-[95vw] lg:w-[95vw] px-[5vw] flex flex-row justify-between m-auto">
-            <p className="text-left pt-[1.5vh] border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px] "> Welcome back {admin?.displayName} 🙂</p>
-            <a href="/account" className="border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px]">Edit Account</a>
-            <button onClick={handleLogOut} className="border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px]">Sign Out</button>
-        </div>
-        <div className="rounded-md shadow-lg my-[0px] mx-auto h-auto md:h-auto lg:h-auto bg-[#A0A694] max-w-[95vw] w-[95vw] flex flex-col md:flex-row lg:flex-row ">
-            <section className=" pb-[10px] mx-auto w-[100%] md:w-[50%] lg:w-[50%] h-[40vh] md:h-[50vh] lg:h-[45vh] ">
-                <form onSubmit={addPost} className="flex flex-col p-[15px] ">
-                    <header className="text-center py-[10px] ">Create New Post</header>
-                    <input className="rounded-lg" type="text" placeholder="Type Your Post's Title Here" onChange={(e) => setPostTitle(e.target.value)}></input>
-                    <br />
-                    <input className="rounded-lg" type="text" placeholder="Type Your Post Here" onChange={(e) => setPost(e.target.value)}></input>
-                    <br />
-                    <input className="rounded-lg" type="text" placeholder="Type Your Tags Here" onChange={(e) => setTags(e.target.value)}></input>
-                    <br />
-                    <div className="flex flex-row justify-around">
-                        <label>
-                            <input type="radio" name="type" value="book" checked={bookOrFilm === 'book'} onChange={handleChange} />
-                            Book
-                        </label>
-                        <label>
-                            <input type="radio" name="type" value="film" checked={bookOrFilm === 'film'} onChange={handleChange} />
-                            Film
-                        </label>
-                        <label>
-                            <input type="file" accept="image/*" name="uploadImg" onChange={encodedImg} />
-                            Post Image
-                        </label>
+    return (
+        <div className="h-[100vh] w-[100vw]flex flex-col ">
+            <div className="max-w-[95vw] text-[20%] md:text-[1em] lg:text-[1.5em] md:w-[95vw] lg:w-[95vw] px-[5vw] flex flex-row justify-between m-auto">
+                <p className="text-left pt-[1.5vh] border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px] "> Welcome back {admin?.displayName} 🙂</p>
+                <a href="/account" className="border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px]">Edit Account</a>
+                <button onClick={handleLogOut} className="border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px]">Sign Out</button>
+            </div>
+            <div className="rounded-md shadow-lg my-[0px] mx-auto h-auto md:h-auto lg:h-auto bg-[#A0A694] max-w-[95vw] w-[95vw] flex flex-col md:flex-row lg:flex-row ">
+                <section className=" pb-[10px] mx-auto w-[100%] md:w-[50%] lg:w-[50%] h-[40vh] md:h-[50vh] lg:h-[45vh] ">
+                    <form onSubmit={addPost} className="flex flex-col p-[15px] ">
+                        <header className="text-center py-[10px] ">Create New Post</header>
+                        <input className="rounded-lg" type="text" placeholder="Type Your Post's Title Here" onChange={(e) => setPostTitle(e.target.value)}></input>
+                        <br />
+                        <input className="rounded-lg" type="text" placeholder="Type Your Post Here" onChange={(e) => setPost(e.target.value)}></input>
+                        <br />
+                        <input className="rounded-lg" type="text" placeholder="Type Your Tags Here" onChange={(e) => setTags(e.target.value)}></input>
+                        <br />
+                        <div className="flex flex-row justify-around">
+                            <label>
+                                <input type="radio" name="type" value="book" checked={bookOrFilm === 'book'} onChange={handleChange} />
+                                Book
+                            </label>
+                            <label>
+                                <input type="radio" name="type" value="film" checked={bookOrFilm === 'film'} onChange={handleChange} />
+                                Film
+                            </label>
+                                <input type="file" accept="image/*" name="uploadImage" onChange={addImg} />
+                        </div>
+                        <br />
+                        <button type="submit" className="bg-[#D2D4D9] rounded-lg shadow-md text-center">Post</button>
+                    </form>
+                </section>
+                <section className="py-[10px] w-[100%] md:w-[50%] lg:w-[50%] h-auto md:h-auto lg:h-auto ">
+                    <div id="postsSection">
                     </div>
-                    <br />
-                    <button type="submit" className="bg-[#D2D4D9] rounded-lg shadow-md text-center">Post</button>
-                </form>
-            </section>
-            <section className="py-[10px] w-[100%] md:w-[50%] lg:w-[50%] h-auto md:h-auto lg:h-auto ">
-                <div id="postsSection">
-                </div>
-            </section>
+                </section>
+            </div>
         </div>
-    </div>
-)
+    )
 }
 
 
