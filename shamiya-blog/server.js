@@ -55,12 +55,29 @@ app.get("/posts/all", async (req, res) => {
   }
 })
 
-app.get("/posts/:type", async(req,res) => {
+app.get("/posts/books", async (req,res) => {
   try{
-    const postRef = db.collection("posts").doc(req.params.id);
-    const response = await postRef.get();
-    res.send(response.data());
+    const postRef = db.collection("posts");
+    // Use the where method to filter the documents by the "type" field
+    const querySnapshot = await postRef.where("type", "==", "book").get();
+
+    // Get an array of documents from the query snapshot
+    const posts = querySnapshot.docs.map(doc => doc.data());
+
+    // Send the array of documents as the response
+    res.send(posts);
   } catch(err){
+    res.send(err);
+  }
+})
+
+app.get("/posts/films", async(req, res) => {
+  try{
+    const postRef= db.collection("posts");
+    const querySnapshot = await postRef.where("type", "==", "film").get();
+    const posts = querySnapshot.docs.map(doc => doc.data());
+    res.send(posts);
+  } catch (err) {
     res.send(err);
   }
 })
