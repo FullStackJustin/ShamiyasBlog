@@ -10,9 +10,9 @@ const Home = () => {
     return (
         <section className="flex flex-col lg:flex-row md:flex-row relative mx-auto mt-[5px] mb-[5px] w-[99vw] h-[screen5] overflow-y-scroll h-[98vh] bg-[#A0A694]">
             <div className=" relative flex m-auto justify-center h-[60%] py-10 items-center flex-auto max-w-[50%]">
-                <img src={urLogoHere} alt="Your Logo" className="w-[30%] max-w-[30%] md:max-w-[45%] pb-[10px] "></img>
+                <img src={urLogoHere} alt="Your Logo" className="w-[40%] max-w-[40%] md:max-w-[45%] pb-[10px] "></img>
                 <div>
-                    <p className="text-center text-2xl font-bold">(Your Blog Name)</p>
+                    <p className="text-center text-5xl md:text-7xl lg:text-8xl font-[willow-std] ">(Your Blog Name)</p>
                     <br/>
                 </div>
                     <p className=" absolute top-[65%] md:bottom-[99%] m-[10px] text-sm md:text-md lg:text-lg">description or slogan or something</p>

@@ -31,7 +31,7 @@ app.post("/posts", async (req, res) => {
       postMessage: req.body.postMessage,
       date: req.body.date,
       tags: req.body.tags,
-      type: JSON.stringify(req.body.type),
+      type: req.body.type,
       image: req.body.image,
     }
     const docRef = await db.collection('posts').doc(id).set(postInfo);
@@ -47,7 +47,7 @@ app.get("/posts/all", async (req, res) => {
     const response = await postsRef.get();
     let responseArr = [];
     response.forEach(doc => {
-      responseArr.push(doc.data());
+      responseArr.push(doc.data('posts'));
     });
     res.send(responseArr);
   } catch(err) {
@@ -55,7 +55,7 @@ app.get("/posts/all", async (req, res) => {
   }
 })
 
-app.get("/posts/:id", async(req,res) => {
+app.get("/posts/:type", async(req,res) => {
   try{
     const postRef = db.collection("posts").doc(req.params.id);
     const response = await postRef.get();
@@ -67,7 +67,7 @@ app.get("/posts/:id", async(req,res) => {
 
 app.post("/posts/update", async(req, res) => {
   try{
-    const id = req.body.id;
+    const id = req.body.title;
     const newPostInfo = {
       newMessage : req.body.postMessage,
       newTitle : req.body.title,
@@ -77,6 +77,19 @@ app.post("/posts/update", async(req, res) => {
     res.send(newPostRef)
   } catch(err){
     res.send(err)
+  }
+})
+app.delete("/posts", async(req, res) => {
+  const id = req.body.id;
+  try{
+    const response = await db.collection("posts").doc(id).delete()
+    res.send(response)
+  }catch(err){
+    if (err.code === 404){
+      res.status(404).send("Sorry, the post was not found")
+    } else {
+      res.status(500).send("Sorry, an error occurred while deleting the post")
+    }
   }
 })
 

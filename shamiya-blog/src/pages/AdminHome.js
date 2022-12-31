@@ -7,54 +7,14 @@ import { auth, storage } from "../firebase";
 const authentication = getAuth();
 
 const AdminHome = () => {
-    //Start - state variables for html inputs
-    const [admin, setAdmin] = useState("");
-    const [tags, setTags] = useState("");
-    const [post, setPost] = useState("");
-    const [postTitle, setPostTitle] = useState("");
-    const [bookOrFilm, setBookOrFilm] = useState("");
-
-    const handleChange = (event) => {
-        setBookOrFilm(event.target.value);
-    };
-    //End
-
-
-    //START - Logout function for logout button
-    const handleLogOut = async (e) => {
-        e.preventDefault();
-        signOut(auth);
-    }
-    // END - Logout function for logout button
-
-    // START - Get the current user data on mount and unmount when user is logged out
-    const unsubscribeRef = useRef(null);
-    useEffect(() => {
-        unsubscribeRef.current =
-            onAuthStateChanged(authentication, (user) => {
-                if (user) {
-                    console.log(user)
-                    setAdmin(user)
-                }
-            });
-        return () => {
-            if (unsubscribeRef.current) {
-                unsubscribeRef.current()
-            }
-        };
-    }, [])
-    //END - Get the current user data on mount and unmount when user is logged out
-
-    // Start - Function and Api calls for displaying posts
-    const displayPosts = async () => {
-        await fetch('http://localhost:3002/posts/all', {
+    const displayPosts = () => {
+        fetch('http://localhost:3002/posts/all', {
             headers: {
                 method: 'GET',
             }
         })
             .then((res) => { return res.json() })
             .then((data) => {
-                console.log(data)
                 let postData = "";
                 data.map((values) => {
                     return postData += `<div class="m-auto p-[10px] rounded-lg bg-[#D2D4D9] mb-[15px] h-auto w-[95%] md:w-[95%] lg:max-w-[85%] flex flex-col ">
@@ -74,6 +34,61 @@ const AdminHome = () => {
 
     }
     window.addEventListener("load", displayPosts);
+
+    //Start - state variables for html inputs
+    const [admin, setAdmin] = useState("");
+    const [tags, setTags] = useState("");
+    const [post, setPost] = useState("");
+    const [postTitle, setPostTitle] = useState("");
+    const [bookOrFilm, setBookOrFilm] = useState("");
+
+    const handleChange = (event) => {
+        setBookOrFilm(event.target.value);
+    };
+    const handleTags = (e) => {
+        let value = e.target.value;
+        if (!value.startsWith("#")) {
+          value = "#" + value;
+        }
+        if (value.includes(" ")) {
+          value = value.replace(/ /g, ", #"); // replace all spaces with hashtags
+        }
+        setTags(value);
+      }
+
+      const handleTagInput = (e) => {
+        let value = e.target.value;
+        value = value.replace(/#/g, ""); // remove all hashtags
+        e.target.value = value;
+      }
+    //End
+
+
+    //START - Logout function for logout button
+    const handleLogOut = async (e) => {
+        e.preventDefault();
+        signOut(auth);
+    }
+    // END - Logout function for logout button
+
+    // START - Get the current user data on mount and unmount when user is logged out
+    const unsubscribeRef = useRef(null);
+    useEffect(() => {
+        unsubscribeRef.current =
+            onAuthStateChanged(authentication, (user) => {
+                if (user) {
+                    setAdmin(user)
+                }
+            });
+        return () => {
+            if (unsubscribeRef.current) {
+                unsubscribeRef.current()
+            }
+        };
+    }, [])
+    //END - Get the current user data on mount and unmount when user is logged out
+
+    // Start - Function and Api calls for displaying posts
     //End - Function and Api calls for displaying posts
 
     // Save image input to state variable
@@ -87,14 +102,12 @@ const AdminHome = () => {
     //Add post function to post frontend inputs to backend
     const addPost = async (e) => {
         e.preventDefault();
-        if (uploadImg == null) return;
+        if (uploadImg == null) console.log("No Picture Uploaded");
         const imgRef = ref(storage, `/images${uploadImg.name}`);
         uploadBytes(imgRef, uploadImg).then( async (snapshot) => {
             const url = await getDownloadURL(snapshot.ref)
                 setImgUrl(url);
                 alert("Your Post has Uploaded")
-        }).then(() => {
-            displayPosts();
         })
         const date = new Date();
         const month = date.getMonth() + 1;
@@ -124,14 +137,44 @@ const AdminHome = () => {
     }
     // END - Function and method for sending post data to backend
 
+    // Delete Posts Function 
+    const [titleToDelete, setTitleToDelete] = useState("");
+    const deletePost = async () => {
+        try{
+            const id = {id : titleToDelete};
+            await fetch('http://localhost:3002/posts', {
+                method: 'DELETE',
+                body: JSON.stringify(id),
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) => {
+                if(res.ok){
+                    return;
+                } else {
+                    console.log("There was a problem deleting post")
+                }
+            })
+        } catch(err){
+            console.log(err)
+        }
+    }
+    displayPosts();
+    
+
     return (
-        <>
+        <>  
+            {/* Top Navbar */}
             <div className="max-w-[95vw] text-[20%] md:text-[1em] lg:text-[1.5em] md:w-[95vw] lg:w-[95vw] px-[5vw] flex flex-row justify-between m-auto">
-                <p className="text-left pt-[1.5vh] border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px] "> Welcome back {admin?.displayName} 🙂</p>
+                <a href="/"><p className="text-left pt-[1.5vh] border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px] "> Welcome back {admin?.displayName} 🙂</p></a>
                 <a href="/account" className="border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px]">Edit Account</a>
                 <button onClick={handleLogOut} className="border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px]">Sign Out</button>
             </div>
-            <div className="rounded-md shadow-lg my-[0px] mx-auto h-auto md:h-auto lg:h-auto bg-[#A0A694] max-w-[95vw] w-[95vw] flex flex-col md:flex-row lg:flex-row ">
+
+            {/* Main Page's Content */}
+            <div className="rounded-md shadow-lg my-[0px] mx-auto h-min md:h-min lg:h-auto bg-[#A0A694] max-w-[95vw] w-[95vw] flex flex-col md:flex-row lg:flex-row ">
                 <section className=" pb-[10px] mx-auto w-[100%] md:w-[50%] lg:w-[50%] h-auto md:h-[50vh] lg:h-[45vh] ">
                     <form onSubmit={addPost} className="flex flex-col p-[15px] ">
                         <header className="text-center py-[10px] ">Create New Post</header>
@@ -139,7 +182,7 @@ const AdminHome = () => {
                         <br />
                         <input className="rounded-lg" type="text" placeholder="Type Your Post Here" onChange={(e) => setPost(e.target.value)}></input>
                         <br />
-                        <input className="rounded-lg" type="text" placeholder="Type Your Tags Here" onChange={(e) => setTags(e.target.value)}></input>
+                        <input className="rounded-lg" type="text" placeholder="Type Your Tags Here" onChange={handleTags} onInput={handleTagInput} ></input>
                         <br />
                         <div className="flex flex-row justify-around">
                             <label>
@@ -154,9 +197,16 @@ const AdminHome = () => {
                         </div>
                         <br />
                         <span className="flex flex-row justify-around">
-                            <button type="submit" className="bg-[#D2D4D9] w-[45%] rounded-lg shadow-md text-center">Post</button>
-                            <button type="reset" className="bg-[#D2D4D9] w-[45%] rounded-lg shadow-md text-center">Reset Form</button>
+                            <button type="submit" className="bg-[#D2D4D9] hover:bg-white  w-[45%] rounded-lg shadow-md text-center">Post</button>
+                            <button type="reset" className="bg-[#D2D4D9]  hover:bg-white w-[45%] rounded-lg shadow-md text-center">Reset Form</button>
                         </span>
+                    </form>
+                    <form onSubmit={deletePost} className="text-center bg-[#A0A694]">
+                        <label className="flex flex-col py-[5px]">
+                            Want to delete a post?
+                            <input onChange={(e) => setTitleToDelete(e.target.value)} className="whitespace-pre-wrap h-auto w-[95%] rounded-lg mx-auto my-[5px]" type="text" placeholder="Type in the post's title that you want to delete exactly as it is written on the post"/>
+                        </label>
+                        <button type="submit">Delete Post</button>
                     </form>
                 </section>
                 <section className="py-[10px] w-[100%] md:w-[50%] lg:w-[50%] h-auto md:h-auto lg:h-auto ">

@@ -42,16 +42,18 @@ const Account = () => {
         setPassword(event.target.value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = () => {
 
         const auth = getAuth();
 
         updateProfile(auth.currentUser, {
             displayName: displayName,
             photoURL: photoURL
-        }).then(function () {
-            console.log('Display name and photo URL updated successfully');
-        }).catch(function (error) {
+        }).then(() => {
+            alert('Display name and photo URL updated successfully')
+            
+        }).then(Navigate('/adminhome'))
+        .catch(function (error) {
             console.error(error);
         });
 
