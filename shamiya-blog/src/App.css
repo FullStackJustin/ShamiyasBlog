@@ -3,5 +3,6 @@ html{
     height: 100vh;
     margin: 0px;
     padding: 0px;
-    background-color: #CCCFC0;
+    background-color: #A0A694;
+    cursor: url(./assets/blueFeather.png) 13 13, auto;
 }
