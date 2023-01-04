@@ -1,5 +1,5 @@
-const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
-const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
+const { initializeApp, cert } = require('firebase-admin/app');
+const { getFirestore } = require('firebase-admin/firestore');
 
 const express = require('express');
 const cors = require('cors');
@@ -14,9 +14,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json())
+app.use(express.static(`${__dirname}./build`))
 app.use(express.urlencoded({ extended: true }))
 
 const serviceAccount = require('./key.json');
+const path = require('path');
 initializeApp({
   credential: cert(serviceAccount),
 })
@@ -110,7 +112,9 @@ app.delete("/posts", async(req, res) => {
   }
 })
 
-
+app.get('*', (req, res)=>{
+  res.sendFile(path.join(__dirname, './build/index.html'));
+});
 
 app.listen(3002, () => {
   console.log('Server listening on port 3002');
