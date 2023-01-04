@@ -5,6 +5,7 @@ import { auth } from '../firebase';
 import "../styles/home.css"
 
 
+
 const Home = () => {
     console.log(auth.currentUser)
 
