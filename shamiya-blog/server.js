@@ -2,22 +2,22 @@ const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
 
 const express = require('express');
-const cors = require('cors');
+// const cors = require('cors');
 
 const app = express();
 
-const corsOptions = {
-  origin: ['http://localhost:3000'],
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
+// const corsOptions = {
+//   origin: ['http://localhost:3000'],
+//   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 app.use(express.json())
-app.use(express.static(`${__dirname}./build`))
+app.use(express.static(`${__dirname}, build`))
 app.use(express.urlencoded({ extended: true }))
 
-const serviceAccount = require('./key.json');
+const serviceAccount = require('../shamiya-blog/key.json');
 const path = require('path');
 initializeApp({
   credential: cert(serviceAccount),
@@ -113,7 +113,7 @@ app.delete("/posts", async(req, res) => {
 })
 
 app.get('*', (req, res)=>{
-  res.sendFile(path.join(__dirname, './build/index.html'));
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.listen(3002, () => {
