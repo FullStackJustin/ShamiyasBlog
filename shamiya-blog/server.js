@@ -1,24 +1,31 @@
 const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
+const bodyParser = require('body-parser');
 
 const express = require('express');
-// const cors = require('cors');
-
+const cors = require('cors');
 const app = express();
+const path = require('path');
 
-// const corsOptions = {
-//   origin: ['http://localhost:3000'],
-//   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
+const corsOptions = {
+  origin: ['http://localhost:3000'],
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
 
 app.use(express.json())
-app.use(express.static(`${__dirname}, build`))
+app.use(express.static(path.join(__dirname, "build")))
 app.use(express.urlencoded({ extended: true }))
+app.get('*', (req, res)=>{
+  res.sendFile(path.join(__dirname, 'build/index.html'));
+});
 
-const serviceAccount = require('../shamiya-blog/key.json');
-const path = require('path');
+app.listen(3002, () => {
+  console.log('Server listening on port 3002');
+});
+const serviceAccount = require('./key.json');
 initializeApp({
   credential: cert(serviceAccount),
 })
@@ -112,10 +119,3 @@ app.delete("/posts", async(req, res) => {
   }
 })
 
-app.get('*', (req, res)=>{
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-app.listen(3002, () => {
-  console.log('Server listening on port 3002');
-});

@@ -19,11 +19,11 @@ const Home = () => {
                     <Link to="/about" className="      PFCursor w-[95%] hover:bg-green-100 text-xl lg:text-md w-[95%] rounded-lg shadow-md text-center py-[10px] mx-auto ">About Me</Link>
                     <Link to="/bookreviews" className="PFCursor w-[95%] hover:bg-green-100 text-xl lg:text-md w-[95%] rounded-lg shadow-md text-center py-[10px] mx-auto ">Book Reviews</Link>
                     <Link to="/filmreviews" className="PFCursor w-[95%] hover:bg-green-100 text-xl lg:text-md w-[95%] rounded-lg shadow-md text-center py-[10px] mx-auto ">Film Reviews</Link>
-                    <div className="flex flex-row justify-center w-[80%] justify-between items-center mx-auto pb-[15px] h-10 ">
+                    {/* <div className="flex flex-row justify-center w-[80%] justify-between items-center mx-auto pb-[15px] h-10 ">
                         <a href="" target="_blank"> <i className="PFCursor fa-brands fa-xl fa-instagram"/></a>&nbsp;
                         <a href="" target="_blank"><i className="PFCursor fa-brands fa-xl fa-linkedin"/></a> &nbsp;
                         <a href="" target="_blank"><i className="PFCursor fa-solid fa-xl fa-podcast"/></a> 
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <Link to="/adminlogin" className="PFCursor absolute right-[5px] h-[25px] w-auto" >Admin Login</Link>

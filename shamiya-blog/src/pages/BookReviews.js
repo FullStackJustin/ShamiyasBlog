@@ -4,6 +4,7 @@
 const BookReviews = () => {
     fetch("http://localhost:3002/posts/books",{
         method: 'GET',
+        ContentType: 'application/json',
     }).then((res) => res.json())
     .then((data) => {
         let postData = "";
