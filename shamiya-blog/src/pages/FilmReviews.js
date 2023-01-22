@@ -1,6 +1,6 @@
 const FilmReviews = () => {
 
-    fetch("http://localhost:3002/posts/films",{
+    fetch("https://miya-blog-backend.onrender.com/posts/films",{
         method: 'GET',
     }).then((res) => res.json())
     .then((data) => {

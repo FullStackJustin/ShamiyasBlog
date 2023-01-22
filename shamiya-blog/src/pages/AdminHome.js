@@ -8,7 +8,7 @@ const authentication = getAuth();
 
 const AdminHome = () => {
     const displayPosts = () => {
-        fetch('http://localhost:3002/posts/all', {
+        fetch('https://miya-blog-backend.onrender.com/posts/all', {
             headers: {
                 method: 'GET',
             }
@@ -123,14 +123,14 @@ const AdminHome = () => {
                 type: bookOrFilm,
                 image: imgUrl,
             }
-            await fetch('http://localhost:3002/posts', {
+            await fetch('https://miya-blog-backend.onrender.com/posts', {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
-            }).then((res) => console.log(res))
+            }).then((res) => console.log("success"))
         } catch (err) {
             console.log(err);
         }
@@ -142,7 +142,7 @@ const AdminHome = () => {
     const deletePost = async () => {
         try{
             const id = {id : titleToDelete};
-            await fetch('http://localhost:3002/posts', {
+            await fetch('https://miya-blog-backend.onrender.com/posts', {
                 method: 'DELETE',
                 body: JSON.stringify(id),
                 mode: 'cors',

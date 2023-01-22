@@ -1,4 +1,5 @@
-import React from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import miyaLogo from "../assets/miyaLogo.png"
 import { auth } from '../firebase';
@@ -7,7 +8,23 @@ import "../styles/home.css"
 
 
 const Home = () => {
-    console.log(auth.currentUser)
+    const [user, setUser] = useState(auth.currentUser);
+
+    //get currently logged in user globally and update state accordingly
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user){
+                setUser(user)
+                console.log(user)
+            } else {
+                setUser(null);
+            }
+        })
+        
+        console.log(user)
+
+    },[user])
+    console.log(user);
 
     return (
         <section className=" flex flex-col lg:flex-row md:flex-row relative mx-auto mt-[5px] mb-[5px] w-[99vw] h-[screen5] overflow-y-scroll h-[98vh] bg-[#A0A694]">
@@ -26,7 +43,11 @@ const Home = () => {
                     </div> */}
                 </div>
             </div>
-            <Link to="/adminlogin" className="PFCursor absolute right-[5px] h-[25px] w-auto" >Admin Login</Link>
+            { user != null ?
+            <Link to="/adminHome" className="PFCursor absolute right-[5px] h-[25px] w-auto" >Homepage</Link>
+            :
+            <Link to="/adminlogin" className="PFCursor absolute right-[5px] h-[25px] w-auto" >Admin Login</Link> 
+            }
         </section>
     )
 

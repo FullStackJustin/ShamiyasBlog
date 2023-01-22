@@ -2,7 +2,7 @@
 
 
 const BookReviews = () => {
-    fetch("http://localhost:3002/posts/books",{
+    fetch("https://miya-blog-backend.onrender.com/posts/books",{
         method: 'GET',
         ContentType: 'application/json',
     }).then((res) => res.json())
