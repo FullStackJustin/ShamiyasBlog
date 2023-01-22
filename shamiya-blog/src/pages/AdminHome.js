@@ -1,6 +1,6 @@
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { auth, storage } from "../firebase";
 // import {collection, addDoc} from 'firebase/firestore';
 
@@ -48,19 +48,19 @@ const AdminHome = () => {
     const handleTags = (e) => {
         let value = e.target.value;
         if (!value.startsWith("#")) {
-          value = "#" + value;
+            value = "#" + value;
         }
         if (value.includes(" ")) {
-          value = value.replace(/ /g, ", #"); // replace all spaces with hashtags
+            value = value.replace(/ /g, ", #"); // replace all spaces with hashtags
         }
         setTags(value);
-      }
+    }
 
-      const handleTagInput = (e) => {
+    const handleTagInput = (e) => {
         let value = e.target.value;
         value = value.replace(/#/g, ""); // remove all hashtags
         e.target.value = value;
-      }
+    }
     //End
 
 
@@ -92,7 +92,7 @@ const AdminHome = () => {
     //End - Function and Api calls for displaying posts
 
     // Save image input to state variable
-    const [uploadImg, setUploadImg] = useState(null)
+    const [uploadImg, setUploadImg] = useState()
     const addImg = (e) => {
         const file = e.target.files[0];
         setUploadImg(file)
@@ -104,10 +104,10 @@ const AdminHome = () => {
         e.preventDefault();
         if (uploadImg == null) console.log("No Picture Uploaded");
         const imgRef = ref(storage, `/images${uploadImg.name}`);
-        uploadBytes(imgRef, uploadImg).then( async (snapshot) => {
+        uploadBytes(imgRef, uploadImg).then(async (snapshot) => {
             const url = await getDownloadURL(snapshot.ref)
-                setImgUrl(url);
-                alert("Your Post has Uploaded")
+            setImgUrl(url);
+            alert("Your Post has Uploaded")
         })
         const date = new Date();
         const month = date.getMonth() + 1;
@@ -130,7 +130,7 @@ const AdminHome = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
-            }).then((res) => console.log("success"))
+            }).then((res) => { displayPosts(); console.log("success") })
         } catch (err) {
             console.log(err);
         }
@@ -139,9 +139,12 @@ const AdminHome = () => {
 
     // Delete Posts Function 
     const [titleToDelete, setTitleToDelete] = useState("");
-    const deletePost = async () => {
-        try{
-            const id = {id : titleToDelete};
+    const deletePost = useCallback(async () => {
+        if (titleToDelete === "") {
+            return;
+        }
+        try {
+            const id = { id: titleToDelete };
             await fetch('https://miya-blog-backend.onrender.com/posts', {
                 method: 'DELETE',
                 body: JSON.stringify(id),
@@ -150,22 +153,25 @@ const AdminHome = () => {
                     'Content-Type': 'application/json',
                 },
             })
-            .then((res) => {
-                if(res.ok){
-                    return;
-                } else {
-                    console.log("There was a problem deleting post")
-                }
-            })
-        } catch(err){
+                .then((res) => {
+                    if (res.ok) {
+                        return;
+                    } else {
+                        console.log("There was a problem deleting post")
+                    }
+                })
+        } catch (err) {
             console.log(err)
         }
-    }
-    displayPosts();
-    
+    })
+    useEffect(() => {
+        deletePost()
+    },[titleToDelete ])
+    window.addEventListener("load", displayPosts)
+
 
     return (
-        <>  
+        <>
             {/* Top Navbar */}
             <div className="max-w-[95vw] text-[20%] md:text-[1em] lg:text-[1.5em] md:w-[95vw] lg:w-[95vw] px-[5vw] flex flex-row justify-between m-auto">
                 <a href="/"><p className="text-left pt-[1.5vh] border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px] "> Welcome back {admin?.displayName} 🙂</p></a>
@@ -204,7 +210,7 @@ const AdminHome = () => {
                     <form onSubmit={deletePost} className="text-center bg-[#A0A694]">
                         <label className="flex flex-col py-[5px]">
                             Want to delete a post?
-                            <input onChange={(e) => setTitleToDelete(e.target.value)} className="whitespace-pre-wrap h-auto w-[95%] rounded-lg mx-auto my-[5px]" type="text" placeholder="Type in the post's title that you want to delete exactly as it is written on the post"/>
+                            <input onChange={(e) => setTitleToDelete(e.target.value)} className="whitespace-pre-wrap h-auto w-[95%] rounded-lg mx-auto my-[5px]" type="text" placeholder="Type in the post's title that you want to delete exactly as it is written on the post" />
                         </label>
                         <button type="submit">Delete Post</button>
                     </form>
