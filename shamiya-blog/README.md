@@ -3,13 +3,4 @@ Purple feather - <a target="_blank" href="https://icons8.com/icon/ZNiapbDcYHq7/f
 Blue feather - <a target="_blank" href="https://icons8.com/icon/X5hihVUwQtlF/feather">Feather</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
 
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
+[![Netlify Status](https://api.netlify.com/api/v1/badges/a54cf5cf-fb45-48eb-b508-dda547c44d24/deploy-status)](https://app.netlify.com/sites/miyareads/deploys)
