@@ -173,10 +173,10 @@ const AdminHome = () => {
     return (
         <>
             {/* Top Navbar */}
-            <div className="max-w-[95vw] text-[20%] md:text-[1em] lg:text-[1.5em] md:w-[95vw] lg:w-[95vw] px-[5vw] flex flex-row justify-between m-auto">
-                <a href="/"><p className="text-left pt-[1.5vh] border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px] "> Welcome back {admin?.displayName} 🙂</p></a>
-                <a href="/account" className="border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px]">Edit Account</a>
-                <button onClick={handleLogOut} className="border-solid border-2  border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px]">Sign Out</button>
+            <div className="w-[95vw] px-[5vw] flex flex-row justify-between m-auto">
+                <a href="/"><p className="text-left pt-[1.5vh] border-solid border-2 text-[1.15rem] md:text-[1.25rem] lg:text-[1.5rem] w-[30vw] border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px] "> Welcome back {admin?.displayName} 🙂</p></a>
+                <a href="/account" className="border-solid border-2 border-black-600 text-[1.15rem] md:text-[1.25rem] lg:text-[1.5rem] w-[30vw] bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px]">Edit Account</a>
+                <button onClick={handleLogOut} className="border-solid border-2 text-[1.15rem] md:text-[1.25rem] lg:text-[1.5rem] w-[30vw] border-black-600 bg-[#A0A694] hover:bg-white rounded-md p-[5px] m-[5px]">Sign Out</button>
             </div>
 
             {/* Main Page's Content */}
