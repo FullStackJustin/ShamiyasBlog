@@ -163,10 +163,10 @@ const AdminHome = () => {
         } catch (err) {
             console.log(err)
         }
-    })
+    },[titleToDelete])
     useEffect(() => {
         deletePost()
-    },[titleToDelete ])
+    },[titleToDelete, deletePost ])
     window.addEventListener("load", displayPosts)
 
 

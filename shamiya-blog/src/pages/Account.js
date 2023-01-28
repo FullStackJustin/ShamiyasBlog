@@ -51,11 +51,11 @@ const Account = () => {
             photoURL: photoURL
         }).then(() => {
             alert('Display name and photo URL updated successfully')
-            
+
         }).then(Navigate('/adminhome'))
-        .catch(function (error) {
-            console.error(error);
-        });
+            .catch(function (error) {
+                console.error(error);
+            });
 
         if (email) {
             updateEmail(auth.currentUser, email).then(() => {
@@ -76,11 +76,13 @@ const Account = () => {
     };
 
     return (
-        <section className="h-[100vh] w-[100vw] bg-[#A0A694] flex flex-col justify-center items-center">
-                    <a href="/adminhome"><button>Back Home</button></a>
+        <section className="h-[100vh] w-[100vw] bg-[#A0A694] flex flex-col justify-center">
+            <div className="flex flex-row w-[60vw] mx-auto justify-around ">
 
-            <header className="text-bold text-center pt-[10vh] ">Update account</header>
-            <form onSubmit={handleSubmit} className="border-double border-4 rounded-lg p-[15px] h-65vh md:max-h[60vh] m-auto lg:max-h-[55%] w-[50vw] md:max-w-[55vw] lg:max-w-[60vw] ">
+                <a href="/adminhome" className="hover:text-white pt-[2vh] "><button>Back Home</button></a>
+                <header              className="hover:text-white pt-[2vh] ">Update account</header>
+            </div>
+            <form onSubmit={handleSubmit} autoComplete="off" className="border-double border-4 rounded-lg p-[15px] h-65vh md:max-h[60vh] mt-[10vh] mx-auto lg:max-h-[55%] w-[50vw] md:max-w-[55vw] lg:max-w-[60vw] ">
                 <label htmlFor="displayName">
                     Display Name:
                     &nbsp; <input
@@ -109,9 +111,11 @@ const Account = () => {
                     Email:
                     &nbsp; <input
                         className="m-auto rounded-lg shadow-md w-[60%] flex-end"
+                        autoComplete="new-password"
                         type="email"
                         id="email"
                         value={email}
+                        placeholder="Update Email"
                         onChange={handleEmailChange}
                     />
                 </label>&nbsp;
@@ -121,17 +125,19 @@ const Account = () => {
                     Password:
                     &nbsp; <input
                         className="m-auto rounded-lg shadow-md w-[60%] flex-end"
+                        autoComplete="new-password"
                         type="password"
                         id="password"
                         value={password}
+                        placeholder="Update Password"
                         onChange={handlePasswordChange}
                     />
                 </label>&nbsp;
                 <br />
                 <br />
                 <div className="flex justify-around flex-row">
-                    <button type="submit">Update Account</button>
-                    <button onClick={handleLogout}>Logout</button>
+                    <button className="hover:text-white" type="submit">Update Account</button>
+                    <button className="hover:text-white" onClick={handleLogout}>Logout</button>
                 </div>
             </form>
         </section>
