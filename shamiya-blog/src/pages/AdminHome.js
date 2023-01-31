@@ -207,12 +207,12 @@ const AdminHome = () => {
                             <button type="reset" className="bg-[#D2D4D9]  hover:bg-white w-[45%] rounded-lg shadow-md text-center">Reset Form</button>
                         </span>
                     </form>
-                    <form onSubmit={deletePost} className="text-center bg-[#A0A694]">
+                    <form className="text-center bg-[#A0A694]">
                         <label className="flex flex-col py-[5px]">
                             Want to delete a post?
                             <input onChange={(e) => setTitleToDelete(e.target.value)} className="whitespace-pre-wrap h-auto w-[95%] rounded-lg mx-auto my-[5px]" type="text" placeholder="Type in the post's title that you want to delete exactly as it is written on the post" />
                         </label>
-                        <button type="submit">Delete Post</button>
+                        <button onClick={deletePost}>Delete Post</button>
                     </form>
                 </section>
                 <section className="py-[10px] w-[100%] md:w-[50%] lg:w-[50%] h-auto md:h-auto lg:h-auto ">
